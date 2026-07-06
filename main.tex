@@ -1,8 +1,30 @@
 %==============================================================
-%  PREAMBLE — RVCC MAT-251 Master Document Noah Berns
+%  PREAMBLE — RVCC MAT-251 Master Document — Noah Berns
+%==============================================================
+%
+%  STRUCTURE
+%    1. Document class
+%    2. Packages (grouped, load-order-sensitive ones noted)
+%    3. Color palette
+%    4. Theorem environments
+%    5. Footnote & caption settings
+%    6. Table of Contents tweaks
+%    7. Math macros & shortcuts
+%    8. Question / Solution macros
+%    9. tcolorbox "sleek" styles
+%   10. Custom lists & environments
+%   11. Document metadata
+%
 %==============================================================
 
+%==============================================================
+%  1. DOCUMENT CLASS
+%==============================================================
 \documentclass[9pt]{amsart}
+
+%==============================================================
+%  2. PACKAGES
+%==============================================================
 
 %--------------------------------------------------------------
 %  Encoding & Language
@@ -44,7 +66,8 @@
 %--------------------------------------------------------------
 %  Boxes, Spacing & Misc
 %--------------------------------------------------------------
-\usepackage{tcolorbox}
+\usepackage{tcolorbox}      % single load; libraries loaded below
+\tcbuselibrary{skins,breakable}
 \usepackage{setspace}
 \usepackage{textcomp}
 \usepackage[symbol]{footmisc}
@@ -70,16 +93,27 @@
 \addbibresource{MyBib.bib}
 
 %==============================================================
-%  CUSTOM DEFINITIONS
+%  3. COLOR PALETTE
 %==============================================================
+\definecolor{palAmber}{HTML}{FFBA49}
+\definecolor{palTeal} {HTML}{20A39E}
+\definecolor{palCoral}{HTML}{EF5B5B}
+\definecolor{palPlum} {HTML}{23001E}
+\definecolor{palGray} {HTML}{A4A9AD}
 
-% --- Theorem environments ---
+%==============================================================
+%  4. THEOREM ENVIRONMENTS
+%==============================================================
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}{Lemma}
 \newtheorem{corollary}{Corollary}
 \newtheorem{proposition}{Proposition}
 \newtheorem{definition}{Definition}
 \newtheorem{remark}{Remark}
+
+%==============================================================
+%  5. FOOTNOTE & CAPTION SETTINGS
+%==============================================================
 
 % --- Footnotes ---
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
@@ -89,38 +123,39 @@
 % this if every caption sits on a dark/colored background.
 \captionsetup{labelfont={color=white, bf}, textfont={color=white}}
 
-% --- Table of Contents ---
+%==============================================================
+%  6. TABLE OF CONTENTS
+%==============================================================
 \makeatletter
 \renewcommand{\l@subsection}{\@tocline{2}{0pt}{2.5pc}{}{}}
 \renewcommand{\l@subsubsection}{\@tocline{3}{0pt}{4pc}{}{}}
 \makeatother
 
-% --- Math operators & shortcuts ---
-\newcommand{\anglevector}[1]{\left\langle #1 \right\rangle} % Angeled Vector Notation
+%==============================================================
+%  7. MATH MACROS & SHORTCUTS
+%==============================================================
 
-\newcommand{\norm}[1]{\left| \left| #1 \right| \right|} % Vector Normalization
-
+% --- Vector notation ---
+\renewcommand{\vec}[1]{\mathbf{#1}}                          % Bold Face Vector Notation
+\newcommand{\anglevector}[1]{\left\langle #1 \right\rangle}  % Angled Vector Notation
+\newcommand{\norm}[1]{\left| \left| #1 \right| \right|}      % Vector Norm
 \newcommand{\unitvector}[2]{\frac{\anglevector{#1}}{\norm{#2}}} % Unit Vector Notation
+\newcommand{\proj}[2]{\mathrm{proj}_{\mathbf{#1}}\mathbf{#2}}   % Vector Projection Notation
+\newcommand{\comp}[2]{\mathrm{comp}_{\mathbf{#1}}\mathbf{#2}}   % Vector Component Notation
 
-\newcommand{\derivative}[2]{\frac{\mathrm{d} #1 }{\mathrm{d} #2 }} % Derivative Notation
+% --- Derivatives & calculus ---
+\newcommand{\derivative}[2]{\frac{\mathrm{d} #1 }{\mathrm{d} #2 }}          % Derivative Notation
+\newcommand{\partialderivative}[2]{\frac{\partial #1 }{\partial #2 }}       % Partial Derivative Notation
+\newcommand{\grad}[2]{\nabla #1\left( #2 \right)}                           % Gradient Vector
+\newcommand{\jacobian}[2]{\begin{vmatrix} \frac{\partial ( #1 )}{\partial ( #2 )} \end{vmatrix}} % Jacobian
+\newcommand{\eval}[2]{\Big|_{#1}^{#2}}                                      % Evaluation Bar
 
-\newcommand{\partialderivative}[2]{\frac{\partial #1 }{\partial #2 }} % Partial Derivative Notation
+% --- Sets ---
+\newcommand{\R}{\mathbb{R}}   % Real Numbers
 
-\newcommand{\proj}[2]{\mathrm{proj}_{\mathbf{#1}}\mathbf{#2}} % Vector Projection Notation
-
-\newcommand{\comp}[2]{\mathrm{comp}_{\mathbf{#1}}\mathbf{#2}} % Vector Component Notation
-
-\renewcommand{\vec}[1]{\mathbf{#1}} % Bold Face Vector Notation
-
-\newcommand{\R}{\mathbb{R}} % Real Numbers
-
-\newcommand{\eval}[2]{\Big|_{#1}^{#2}} % Evaluation Bar
-
-\newcommand{\grad}[2]{\nabla #1\left( #2 \right)} % Gradient Vector
-
-\newcommand{\jacobian}[2]{\begin{vmatrix} \frac{\partial ( #1 )}{\partial ( #2 )} \end{vmatrix}}
-
-% --- Question / Solution macros ---
+%==============================================================
+%  8. QUESTION / SOLUTION MACROS
+%==============================================================
 \newcounter{qcount}
 \newcommand{\question}[1]{%
   \medskip
@@ -131,6 +166,32 @@
   \noindent\textbf{Solution.}\enspace #1\par
   \medskip
 }
+
+%==============================================================
+%  9. TCOLORBOX "SLEEK" STYLES
+%==============================================================
+\tcbset{
+  sleek/.style={
+    enhanced, breakable, frame hidden,
+    colback=white,
+    arc=7pt, outer arc=7pt, boxsep=0pt,
+    left=20pt, right=18pt, top=15pt, bottom=15pt,
+    drop fuzzy shadow southeast={palGray!70},
+    fonttitle=\bfseries\sffamily, coltitle=white,
+    attach boxed title to top left={xshift=16pt, yshift=-\tcboxedtitleheight/2},
+    boxed title style={frame hidden, arc=5pt, boxsep=5pt, left=8pt, right=8pt},
+  }
+}
+
+\newtcolorbox{sleekbox}[2][palTeal]{%
+  sleek, borderline west={4pt}{0pt}{#1}, colbacktitle=#1, title={#2}}
+
+\newtcolorbox{sleekplain}[1][palTeal]{%
+  sleek, borderline west={4pt}{0pt}{#1}}
+
+%==============================================================
+%  10. CUSTOM LISTS & ENVIRONMENTS
+%==============================================================
 
 % --- Sub-parts: (a), (b), (c)... ---
 \newlist{parts}{enumerate}{1}
@@ -149,7 +210,7 @@
   }
 
 %==============================================================
-%  DOCUMENT METADATA
+%  11. DOCUMENT METADATA
 %==============================================================
 
 \title{RVCC MAT-251 Master Document Noah Berns}
@@ -178,13 +239,44 @@
 \newpage
 \section{Resources:}
 \begin{itemize}
-    \item Calculus I and II Review: \href{https://www.khanacademy.org/math/ap-calculus-bc}{Khan Academy} \cite{collegeboard_apcalcbc, khanacademy_calcbc}
-    \item Professor Forte: \href{https://www.youtube.com/watch?v=NJiaIr5Y2VU&list=PLVOT1I6lLvjfDhACPSMXam2diM0IBR3hl}{Youtube} \cite{forte_calc3_2025}
-    \item Paul's Online Math Notes: \href{https://tutorial.math.lamar.edu/Classes/CalcIII/CalcIII.aspx}{Calculus 3} \cite{dawkins_calc3}
+    \item \href{https://www.khanacademy.org/math/ap-calculus-bc}{Calculus I and II Review} \cite{collegeboard_apcalcbc, khanacademy_calcbc}
+    \item \href{https://www.youtube.com/watch?v=NJiaIr5Y2VU&list=PLVOT1I6lLvjfDhACPSMXam2diM0IBR3hl}{Professor Forte} \cite{forte_calc3_2025}
+    \item \href{https://tutorial.math.lamar.edu/Classes/CalcIII/CalcIII.aspx}{Paul's Online Math Notes} \cite{dawkins_calc3}
+    \item \href{https://www.wolframcloud.com/env/19521757-1a29-4b32-9b72-33be09e19ce3}{Mathematica Notebook}
 \end{itemize}
 
+\section{Environment Demos:}
+
+    \begin{sleekbox}[palTeal]{Definition}
+        A \emph{smooth manifold} is a topological manifold equipped with an atlas whose
+        transition maps are all infinitely differentiable. Accent uses \texttt{palTeal}.
+    \end{sleekbox}
+     
+    \vspace{10pt}
+    \begin{sleekbox}[palCoral]{Warning}
+        The second-derivative test is inconclusive when the Hessian determinant vanishes.
+        Accent uses \texttt{palCoral}.
+    \end{sleekbox}
+     
+    \vspace{10pt}
+    \begin{sleekbox}[palAmber]{Example}
+        For $f(x,y)=x^2+y^2$, the gradient is $\nabla f = (2x,\,2y)$, which vanishes only
+        at the origin. Accent uses \texttt{palAmber}.
+    \end{sleekbox}
+     
+    \vspace{10pt}
+        \begin{sleekbox}[palPlum]{Theorem}
+        Every continuous function on a compact set attains its maximum and minimum.
+        Accent uses \texttt{palPlum}.
+    \end{sleekbox}
+     
+    \vspace{10pt}
+    \begin{sleekplain}[palGray]
+    A title-free variant for asides and margin-style notes. Accent uses \texttt{palGray}.
+    \end{sleekplain}
+
 \section{Unit 13:}
-    \subsection{Lesson Plan:}
+    \subsection{Lessons:}
         \begin{itemize}
             \item \href{https://www.youtube.com/watch?v=NJiaIr5Y2VU&list=PLVOT1I6lLvjfDhACPSMXam2diM0IBR3hl&index=1&t=1s}{Vectors}
             \item \href{https://www.youtube.com/watch?v=OggR4c3UgKg&list=PLVOT1I6lLvjfDhACPSMXam2diM0IBR3hl&index=2}{Cross Products and Dot Products}
@@ -192,33 +284,40 @@
         \end{itemize}
     
     \subsection{Labs/Homework/Discussions:}
-        \paragraph{Discussion \#1 Introductions:}
+        \paragraph{Discussion \#1 Introductions:}\leavevmode\par\medskip
             \input{Unit 13/Discussion #1 Introductions}
+            \leavevmode\par\medskip
             
-        \paragraph{Lab 0 - Introduction to Mathematica (not collected):}
+        \paragraph{Lab 0 - Introduction to Mathematica (not collected):}\leavevmode\par\medskip
             \input{Unit 13/Lab 0 - Introduction to Mathematica (not collected)}
+            \leavevmode\par\medskip
             
-        \paragraph{Homework 13.1 - 13.3:}
+        \paragraph{Homework 13.1 - 13.3:}\leavevmode\par\medskip
             \input{Unit 13/Homework 13.1 - 13.3}
+            \leavevmode\par\medskip
             
-        \paragraph{Discussion \#2 Vectors and Dot Products:}
+        \paragraph{Discussion \#2 Vectors and Dot Products:}\leavevmode\par\medskip
             \input{Unit 13/Discussion #2 Vectors and Dot Products}
+            \leavevmode\par\medskip
             
-        \paragraph{Lab 1 - (Sec. 13.1 - 13.5):}
-            \input{Unit 13/Lab 1 - (Sec. 13.1 - 13.5)}
+        \paragraph{Lab 1 - (Sec. 13.1 - 13.5):}\leavevmode\par\medskip
+            \input{Unit 13/Lab 1/Lab 1 - (Sec. 13.1 - 13.5)}
+            \leavevmode\par\medskip
             
-        \paragraph{Homework 13.4 - 13.6:}
+        \paragraph{Homework 13.4 - 13.6:}\leavevmode\par\medskip
             \input{Unit 13/Homework 13.4 - 13.6}
+            \leavevmode\par\medskip
             
-        \paragraph{Discussion \#3 Potato Chips and 3D Surfaces:}
+        \paragraph{Discussion \#3 Potato Chips and 3D Surfaces:}\leavevmode\par\medskip
             \input{Unit 13/Discussion #3 Potato Chips and 3D Surfaces}
+            \leavevmode\par\medskip
 
 \section{Unit 14:}
-    \subsection{Lesson Plan:}
+    \subsection{Lessons:}
         \begin{itemize}
             \item \href{https://www.youtube.com/watch?v=HBRli7Jv_Ng&list=PLVOT1I6lLvjfDhACPSMXam2diM0IBR3hl&index=4}{Vector Valued Functions}
             \item \href{https://www.youtube.com/watch?v=gz-bhgt3NbQ&list=PLVOT1I6lLvjfDhACPSMXam2diM0IBR3hl&index=5}{Length of a Curve}
-            \item \href{youtube.com/watch?v=hUq-uHI7Mpw&list=PLVOT1I6lLvjfDhACPSMXam2diM0IBR3hl&index=6}{Curvature and Normal Vectors Pt.1}
+            \item \href{https://www.youtube.com/watch?v=hUq-uHI7Mpw&list=PLVOT1I6lLvjfDhACPSMXam2diM0IBR3hl&index=6}{Curvature and Normal Vectors Pt.1}
             \item \href{https://www.youtube.com/watch?v=eLPrbhmgC0g&list=PLVOT1I6lLvjfDhACPSMXam2diM0IBR3hl&index=7a}{Binormal Vectors and Torsion Pt.2}
         \end{itemize}
     
@@ -233,9 +332,10 @@
             \input{Unit 14/Homework 14.3 - 14.5}
 
 \section{Chapter 13 \& 14 Test:}
+    \subsection{Review Material:}
 
 \section{Unit 15:}
-    \subsection{Lesson Plan:}
+    \subsection{Lessons:}
         \begin{itemize}
             \item \href{https://www.youtube.com/watch?v=jcgdm4dNoG0&list=PLVOT1I6lLvjfDhACPSMXam2diM0IBR3hl&index=8}{Level Curves}
             \item \href{https://www.youtube.com/watch?v=jcgdm4dNoG0&list=PLVOT1I6lLvjfDhACPSMXam2diM0IBR3hl&index=8}{Limits and Continuity}
@@ -280,9 +380,10 @@
             \input{Unit 15/Lab 5 - (Ch.15 Part 3)}
 
 \section{Chapter 15 Test:}
+    \subsection{Review Material:}
 
 \section{Unit 16:}
-    \subsection{Lesson Plan:}
+    \subsection{Lessons:}
         \begin{itemize}
             \item \href{https://www.youtube.com/watch?v=Ytj-Gbl1KDY&list=PLVOT1I6lLvjfDhACPSMXam2diM0IBR3hl&index=20}{Double Integrals Over Rectangular Regions}
             \item \href{https://www.youtube.com/watch?v=xrHwl5r1rJA&list=PLVOT1I6lLvjfDhACPSMXam2diM0IBR3hl&index=21}{Double Integrals Over General Regions}
@@ -320,9 +421,10 @@
             \input{Unit 16/Lab 7 - (Ch.16 Part 2)}
 
 \section{Chapter 16 Test:}
+    \subsection{Review Material:}
 
 \section{Unit 17:}
-    \subsection{Lesson Plan:}
+    \subsection{Lessons:}
         \begin{itemize}
             \item \href{https://www.youtube.com/watch?v=qD6xUP-1-DY&list=PLVOT1I6lLvjfDhACPSMXam2diM0IBR3hl&index=31}{Vector Fields}
             \item \href{https://www.youtube.com/watch?v=sUYdWoHrI2g&list=PLVOT1I6lLvjfDhACPSMXam2diM0IBR3hl&index=32}{Line Integrals Pt.1}
@@ -353,5 +455,6 @@
             \input{Unit 17/Homework 17.5 - 17.8}
 
 \section{Final Exam:}
+    \subsection{Review Material:}
 
 \end{document}
